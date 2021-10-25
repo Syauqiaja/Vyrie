@@ -8,12 +8,12 @@ public class Control : MonoBehaviour
 
     private LineRenderer lineRenderer;
     private Rigidbody2D rigidbody;
-    private Waypoints waypointHandler;
-    private Vector3 nextPoint;
-    private Vector3 prevPoint;
     private Vector2 velocity;
     private Color endColor = new Vector4(1f,1f,1f,0.1f);
     private Color startColor = new Vector4(1f,1f,1f,0f);
+
+    [Header("Waypoint")]
+    [SerializeField] private Waypoint currWaypoint;
 
     private bool isMoving = false;
     private bool canMove = true;
@@ -22,11 +22,8 @@ public class Control : MonoBehaviour
     void Start()
     {
         lineRenderer = GetComponent<LineRenderer>();
-        waypointHandler = GameObject.FindWithTag("Waypoint").GetComponent<Waypoints>();
         rigidbody = GetComponent<Rigidbody2D>();
-        transform.position = waypointHandler.NextWaypoint();
-        nextPoint = waypointHandler.NextWaypoint();
-        prevPoint = transform.position;
+        transform.position = currWaypoint.transform.position;
         lineRenderer.startColor = startColor;
     }
 
@@ -42,7 +39,7 @@ public class Control : MonoBehaviour
             lineRenderer.SetPosition(1,transform.TransformPoint(0f, -0.3f, 0f));
         }
 
-        if((transform.position - nextPoint).magnitude < 0.2f && isMoving) Arrived();
+        if((transform.position - currWaypoint.nextWaypoint.Pos()).magnitude < 0.2f && isMoving) Arrived();
     }
 
     private void FixedUpdate() {
@@ -55,16 +52,17 @@ public class Control : MonoBehaviour
         canMove = false;
         StopCoroutine(removeTrail());
         lineRenderer.endColor = endColor;
-        prevPoint = transform.position;
-        lineRenderer.SetPosition(0, prevPoint);
-        transform.up = nextPoint - transform.position;
-        velocity = nextPoint - transform.position;
+        lineRenderer.SetPosition(0, currWaypoint.Pos());
+        transform.up = currWaypoint.nextWaypoint.Pos() - transform.position;
+        velocity = currWaypoint.nextWaypoint.Pos() - transform.position;
         velocity.Normalize();
+        currWaypoint.Leave();
     }
 
     void Arrived(){
-        transform.position = nextPoint;
-        nextPoint = waypointHandler.NextWaypoint();
+        transform.position = currWaypoint.nextWaypoint.Pos();
+        currWaypoint = currWaypoint.nextWaypoint;
+        currWaypoint.Arrive();
         transform.up = Vector3.up;
         CameraMovement.Instance.MoveVertical(transform.position.y + 2f);
         StartCoroutine(removeTrail());
