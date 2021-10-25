@@ -81,4 +81,10 @@ public class Control : MonoBehaviour
         canMove = true;
         yield return null;
     }
+
+    private void OnTriggerEnter2D(Collider2D other) {
+        if(other.CompareTag("Enemy")){
+            gameObject.SetActive(false);
+        }
+    }
 }

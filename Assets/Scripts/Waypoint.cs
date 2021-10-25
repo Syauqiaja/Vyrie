@@ -6,54 +6,32 @@ public class Waypoint : MonoBehaviour
 {
     public Waypoint nextWaypoint;
 
-    private SpriteRenderer sprite;
-    private IEnumerator arriveCoroutine = null;
-    private Animator animator;
+    [SerializeField] private Animator ringAnimator;
+    [SerializeField] private EnemyPatrol[] enemies;
 
     private void Awake() {
-        animator = GetComponent<Animator>();
-        sprite = GetComponent<SpriteRenderer>();
+        enemies = GetComponentsInChildren<EnemyPatrol>();
     }
 
     public void Arrive(){
-        arriveCoroutine = Arriving();
-        animator.SetTrigger("Arrived");
-        // StartCoroutine(arriveCoroutine);
+        foreach (EnemyPatrol enemy in enemies)
+        {
+            enemy.Throw();
+        }
+        ringAnimator.SetTrigger("Arrived");
     }
 
     public void Leave(){
-        if(arriveCoroutine != null) StopCoroutine(arriveCoroutine);
-        animator.SetTrigger("Leave");
-        // StartCoroutine(Leaving());
-    }
-
-    IEnumerator Arriving(){
-        float _timer = 0f;
-        while(_timer <1f){
-            sprite.color = Color.Lerp(sprite.color,Color.white, _timer);
-            _timer += Time.deltaTime * 0.5f;
-            yield return null;
-        }
-
-        sprite.color = Color.white;
-
-        yield return null;
-    }
-
-    IEnumerator Leaving(){
-        float _timer = 0f;
-        while(_timer <1f){
-            sprite.color = Color.Lerp(sprite.color,Color.clear, _timer);
-            _timer += Time.deltaTime * 0.5f;
-            yield return null;
-        }
-
-        sprite.color = Color.clear;
-
-        yield return null;
+        // ringAnimator.SetTrigger("Leave");
     }
 
     public Vector3 Pos(){
         return transform.position;
+    }
+
+    private void OnDrawGizmos() {
+        Gizmos.color = Color.white;
+        if(nextWaypoint != null)
+        Gizmos.DrawLine(transform.position, nextWaypoint.Pos());
     }
 }
