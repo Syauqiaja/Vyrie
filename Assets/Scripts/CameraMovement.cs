@@ -17,22 +17,28 @@ public class CameraMovement : MonoBehaviour
         player = GameObject.FindWithTag("Player").GetComponent<Transform>();
     }
 
-    public void MoveVertical(float pos){
+    public void MoveVertical(Vector3 pos){
         if(lastCoroutine != null) StopCoroutine(lastCoroutine);
+        Debug.Log(Mathf.Abs(player.transform.position.x - transform.position.x));
+        if(Mathf.Abs(player.transform.position.x - transform.position.x) > 1.5f){
+            pos -= (player.transform.position.x - transform.position.x) > 0f ? new Vector3(1.5f,-2f,-transform.position.z) : new Vector3(-1.5f,-2f,-transform.position.z);
+        }else pos = new Vector3(transform.position.x,pos.y + 2f,transform.position.z);
         lastCoroutine = moveCamera(pos);
         StartCoroutine(lastCoroutine);
     }
 
-    IEnumerator moveCamera(float pos){
+    IEnumerator moveCamera(Vector3 pos){
         float _timer = 0f;
+        float multiplier = 1f;
         while(_timer < 1f){
             transform.position = Vector3.Lerp(transform.position, 
-                                            new Vector3(transform.position.x, pos, transform.position.z), 
-                                            _timer);
-            _timer += Time.deltaTime * 0.1f;
+                                              pos, 
+                                              Mathf.SmoothStep(0f, 1f, _timer));
+            _timer += Time.deltaTime * multiplier;
+            if(multiplier > 0.1f)multiplier *= .92f;
             yield return null;
         }
-        transform.position = new Vector3(transform.position.x, pos, transform.position.z);
+        transform.position = pos;
         yield return null;
     }
 }

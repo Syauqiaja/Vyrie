@@ -13,7 +13,7 @@ public class Control : MonoBehaviour
     private Color startColor = new Vector4(1f,1f,1f,0f);
 
     [Header("Waypoint")]
-    [SerializeField] private Waypoint currWaypoint;
+    public Waypoint currWaypoint;
 
     private bool isMoving = false;
     private bool canMove = true;
@@ -64,8 +64,13 @@ public class Control : MonoBehaviour
         currWaypoint = currWaypoint.nextWaypoint;
         currWaypoint.Arrive();
         transform.up = Vector3.up;
-        CameraMovement.Instance.MoveVertical(transform.position.y + 2f);
+        Vector3 camMove;
+        CameraMovement.Instance.MoveVertical(transform.position);
         StartCoroutine(removeTrail());
+
+        if(currWaypoint == LevelHandler.Instance.currentLevel.last){
+            LevelHandler.Instance.DeployLevel();
+        }
     }
 
     private IEnumerator removeTrail(){
