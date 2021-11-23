@@ -9,6 +9,10 @@ public class GameAsset : MonoBehaviour
 
     public Sprite ringSprite;
 
+    public GameObject coin;
+    public GameObject hati;
+    public GameObject sepatu;
+
     private void Awake() {
         if (_instance != null && _instance != this)
         {

@@ -33,8 +33,8 @@ public class EnemyPatrol : MonoBehaviour
      void Throwing(){
          radius += Time.deltaTime * 10f;
         Vector3 currentPosition;
-        currentPosition.x = Mathf.Cos(Time.time * speed - (float)order/2f) * radius;
-        currentPosition.y = Mathf.Sin(Time.time * speed - (float)order/2f) * radius;
+        currentPosition.x = Mathf.Cos(Time.time * speed * 1.5f - (float)order * 1.1f/2f) * radius;
+        currentPosition.y = Mathf.Sin(Time.time * speed * 1.5f - (float)order * 1.1f/2f) * radius;
         currentPosition.z = 0;
 
         transform.position = centerPoint.position + currentPosition;
@@ -42,8 +42,8 @@ public class EnemyPatrol : MonoBehaviour
 
     void Move(){
         Vector3 currentPosition;
-        currentPosition.x = Mathf.Cos(Time.time * speed - (float)order/2f/radius) * radius;
-        currentPosition.y = Mathf.Sin(Time.time * speed - (float)order/2f/radius) * radius;
+        currentPosition.x = Mathf.Cos(Time.time * speed * 1.5f - (float)order * 1.1f/2f/radius) * radius;
+        currentPosition.y = Mathf.Sin(Time.time * speed * 1.5f - (float)order * 1.1f/2f/radius) * radius;
         currentPosition.z = 0;
 
         transform.position = centerPoint.position + currentPosition;

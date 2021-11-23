@@ -12,7 +12,7 @@ TagManager:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Ignore Global
   - Water
   - UI
   - 
@@ -44,4 +44,13 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Ignore Global 2
+    uniqueID: 2883762223
+    locked: 0
+  - name: Ignore Global
+    uniqueID: 4135369099
+    locked: 0
+  - name: Ignore Any
+    uniqueID: 3572038177
     locked: 0
